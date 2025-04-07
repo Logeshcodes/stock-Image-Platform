@@ -26,7 +26,7 @@ export const login = async (req: Request, res: Response) => {
         const user = await findUser(email);
 
         if (!user) {
-            return res.json({
+            res.json({
               success: false,
               message: ResponseError.ACCOUNT_NOT_FOUND,
             });
@@ -35,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
         const isPasswordValid = await comparePasswords(password, user.password) ;
 
         if (!isPasswordValid) {
-            return res.json({
+            res.json({
               success: false,
               message: ResponseError.INVAILD_PASSWORD,
             });
