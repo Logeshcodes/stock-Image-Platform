@@ -2,6 +2,7 @@ export const ResponseError = {
     EXISTING_USER : "User already exists." ,
     SIGNUP_SUCCESS : "OTP sent to email Account",
     ACCOUNT_LOGIN_SUCCESS : "Login successful. Welcome back!",
+    ACCOUNT_NOT_FOUND : "User Not Found !",
 
 
     RESET_PASSWORD : "Reset your password !",
@@ -9,6 +10,7 @@ export const ResponseError = {
     PASSWORD_NOT_UPDATED : "Password Not Updated",  
 
     PASSWORD_WRONG : "Current Password is Wrong" ,
+    INVAILD_PASSWORD : "Invaild password. Try again." ,
 
     IMAGE_UPLOADED_SUCCESS : "Image uploaded successfully !",
     IMAGE_UPLOAD_FAILED : "Image upload failed",

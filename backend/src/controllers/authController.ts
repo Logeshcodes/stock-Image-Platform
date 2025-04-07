@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser, resetPassword , getUserPassword } from '../services/authService';
+import { registerUser, loginUser, resetPassword , getUserPassword, findUser } from '../services/authService';
 import { ResponseError } from '../utils/constants';
 import bcrypt from 'bcrypt';
+import { comparePasswords } from '../utils/passwordUtils';
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -21,11 +22,32 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body;
+
+        const user = await findUser(email);
+
+        if (!user) {
+            return res.json({
+              success: false,
+              message: ResponseError.ACCOUNT_NOT_FOUND,
+            });
+          }
+
+        const isPasswordValid = await comparePasswords(password, user.password) ;
+
+        if (!isPasswordValid) {
+            return res.json({
+              success: false,
+              message: ResponseError.INVAILD_PASSWORD,
+            });
+          }
+
         const token = await loginUser(email, password);
-        res.status(200).json({ token ,
-            success: true,
-            message: ResponseError.ACCOUNT_LOGIN_SUCCESS,
-        });
+        if(token){
+            res.status(200).json({ token ,
+                success: true,
+                message: ResponseError.ACCOUNT_LOGIN_SUCCESS,
+            });
+        }
     } catch (error: any) {
         res.status(400).json({ error: error.message });
     }
