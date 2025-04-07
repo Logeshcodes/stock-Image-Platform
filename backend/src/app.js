@@ -12,7 +12,7 @@ const ImageRoutes_1 = __importDefault(require("./routes/ImageRoutes"));
 dotenv_1.default.config();
 (0, config_1.connectToDatabase)();
 const app = (0, express_1.default)();
-// const FRONTEND_ENV = process.env.FRONTEND_URL || "http://localhost:3000" || "https://stock-image-platform-two.vercel.app" || "https://stock-image-platform-jeoi.vercel.app";
+
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 app.use((0, cors_1.default)({
     origin: FRONTEND_URL.replace(/\/$/, ""),

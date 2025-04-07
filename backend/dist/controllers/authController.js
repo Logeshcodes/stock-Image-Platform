@@ -16,6 +16,7 @@ exports.resetPasswordController = exports.login = exports.register = void 0;
 const authService_1 = require("../services/authService");
 const constants_1 = require("../utils/constants");
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const passwordUtils_1 = require("../utils/passwordUtils");
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, username, phoneNumber, password } = req.body;
@@ -34,11 +35,30 @@ exports.register = register;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
+        const user = yield (0, authService_1.findUser)(email);
+        if (!user) {
+            res.json({
+                success: false,
+                message: constants_1.ResponseError.ACCOUNT_NOT_FOUND,
+            });
+            return;
+        }
+        console.log("password : ", password, "psw", user.password);
+        const isPasswordValid = yield (0, passwordUtils_1.comparePasswords)(password, user.password);
+        if (!isPasswordValid) {
+            res.json({
+                success: false,
+                message: constants_1.ResponseError.INVAILD_PASSWORD,
+            });
+            return;
+        }
         const token = yield (0, authService_1.loginUser)(email, password);
-        res.status(200).json({ token,
-            success: true,
-            message: constants_1.ResponseError.ACCOUNT_LOGIN_SUCCESS,
-        });
+        if (token) {
+            res.status(200).json({ token,
+                success: true,
+                message: constants_1.ResponseError.ACCOUNT_LOGIN_SUCCESS,
+            });
+        }
     }
     catch (error) {
         res.status(400).json({ error: error.message });

@@ -20,6 +20,9 @@ export const registerUser = async (email: string, username: string, phoneNumber 
 
 export const loginUser = async (email: string, password: string) => {
     const user: any = await findUserByEmail(email);
+    if (!user || !(await comparePasswords(password, user.password))) {
+        throw new Error('Invalid email or password');
+    }
     return generateJWT(user._id);
 };
 

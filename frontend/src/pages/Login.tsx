@@ -21,16 +21,17 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleSubmit = async (e : any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     if (!email || !password) {
+      toast.error("Email and password are required.");
       setLoading(false);
       return;
     }
-
+  
     try {
       const res = await fetch(`${backendUrl}/auth/login`, {
         method: "POST",
@@ -39,44 +40,34 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
-      console.log("res : " ,res)
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        console.log(errorData);
-
-        let errorMessage = "Something went wrong!";
-
-        if (res.status === 404) {
-          errorMessage = "User not found";
-        } else if (res.status === 401) {
-          errorMessage = "Wrong credentials";
-        } else if (errorData.message) {
-          errorMessage = errorData.message;
-        }
-        console.log(errorMessage);
-
-        throw new Error(errorMessage);
-      }
-
+  
       const data = await res.json();
 
-      login(data.token, data);
 
-      toast.success("Login successful!");
+      console.log("data : " , data);
+  
+      if (data.success) {
+        setLoading(true);
+        login(data.token, data);
+        toast.success(data.message);
 
-      setTimeout(() => {
-        navigate("/Dashboard", { replace: true });
-      }, 2000);
+        setTimeout(() => {
+          navigate("/Dashboard", { replace: true });
+        }, 2000);
+     
+      }else{
+        toast.error(data.message);
+        setLoading(false);
+      }
+  
     } catch (err) {
       console.error("There was a problem with the fetch operation:", err);
- 
+      toast.error("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-600 to-blue-600 relative overflow-hidden">
       {/* Animated background elements */}

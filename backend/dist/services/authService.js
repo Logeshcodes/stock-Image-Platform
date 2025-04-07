@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.getUserPassword = exports.loginUser = exports.registerUser = void 0;
+exports.resetPassword = exports.getUserPassword = exports.findUser = exports.loginUser = exports.registerUser = void 0;
 const userRepository_1 = require("../repositories/userRepository");
 const passwordUtils_1 = require("../utils/passwordUtils");
 const jwtUtils_1 = require("../utils/jwtUtils");
@@ -27,12 +27,14 @@ const registerUser = (email, username, phoneNumber, password) => __awaiter(void 
 exports.registerUser = registerUser;
 const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield (0, userRepository_1.findUserByEmail)(email);
-    if (!user || !(yield (0, passwordUtils_1.comparePasswords)(password, user.password))) {
-        throw new Error('Invalid email or password');
-    }
     return (0, jwtUtils_1.generateJWT)(user._id);
 });
 exports.loginUser = loginUser;
+const findUser = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield (0, userRepository_1.findUserByEmail)(email);
+    return user;
+});
+exports.findUser = findUser;
 const getUserPassword = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     return yield (0, userRepository_1.getUser)(userId);
 });

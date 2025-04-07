@@ -24,22 +24,23 @@ export const login = async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         const user = await findUser(email);
-
         if (!user) {
-            res.json({
-              success: false,
-              message: ResponseError.ACCOUNT_NOT_FOUND,
-            });
-          }
+        res.status(404).json({
+            success: false,
+            message: ResponseError.ACCOUNT_NOT_FOUND,
+        });
+        }
 
-        const isPasswordValid = await comparePasswords(password, user.password) ;
+        console.log("password : " , password, "psw" ,  user.password );
 
+
+        const isPasswordValid = await comparePasswords(password, user.password);
         if (!isPasswordValid) {
-            res.json({
-              success: false,
-              message: ResponseError.INVAILD_PASSWORD,
-            });
-          }
+            res.status(401).json({
+            success: false,
+            message: ResponseError.INVAILD_PASSWORD,
+          });
+        }
 
         const token = await loginUser(email, password);
         if(token){
