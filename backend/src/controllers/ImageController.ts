@@ -3,6 +3,7 @@ import { imageService } from "../services/ImageService";
 import { imageRepository } from "../repositories/ImageRepository";
 import path from "path";
 import fs from 'fs/promises';
+import { ResponseError } from "../utils/constants";
 
 const imageSvc = imageService(imageRepository);
 
@@ -14,9 +15,14 @@ export const uploadImages = async (req: any, res: Response) => {
 
     const uploadedImages = await imageSvc.uploadImages(images, userId, titles);
 
-    res.status(201).json(uploadedImages);
+    res.status(201).json({uploadedImages  , 
+      success: true ,
+      message: ResponseError.IMAGE_UPLOADED_SUCCESS,} );
   } catch (error) {
-    res.status(500).json({ error: "Image upload failed" });
+    res.status(500).json({ 
+      success: false,
+      message: ResponseError.IMAGE_UPLOAD_FAILED,
+      });
   }
 };
 
@@ -30,15 +36,6 @@ export const getImages = async (req: any, res: Response) => {
   }
 };
 
-// export const deleteImage = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-//     await imageSvc.deleteImage(id);
-//     res.status(200).json({ message: "Image deleted" });
-//   } catch (error) {
-//     res.status(500).json({ error: "Image deletion failed" });
-//   }
-// };
 
 export const deleteImage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
@@ -47,7 +44,7 @@ export const deleteImage = async (req: Request, res: Response): Promise<void> =>
     const image: any = await imageSvc.getImageDoc(id); 
 
     if (!image) {
-      res.status(404).json({ message: "Image not found" });
+      res.status(404).json({ message: ResponseError.IMAGE_NOTFOUND });
       return;
     }
 
@@ -62,11 +59,10 @@ export const deleteImage = async (req: Request, res: Response): Promise<void> =>
     }
     
     await imageSvc.deleteImage(id); 
-    res.status(200).json({ message: "Image and file deleted successfully" });
+    res.status(200).json({ success : true , message: ResponseError.IMAGE_DELETED_SUCCESS });
 
   } catch (error) {
-    console.error('Error deleting image:', error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: ResponseError.INTERNAL_RESPONSE_ERROR });
   }
 };
 
@@ -99,9 +95,9 @@ export const editImageTitle = async (req: Request, res: Response): Promise<void>
   const { title } = req.body;
   try {
     await imageSvc.updateImageTitle(id, title);
-    res.status(200).json({ message: "Image title updated successfully" });
+    res.status(200).json({ message: ResponseError.IMAGE_EDITED });
   } catch (error) {
-    res.status(500).json({ message: "Failed to update image title" });
+    res.status(500).json({ message: ResponseError.INTERNAL_RESPONSE_ERROR });
   }
 };
 
@@ -112,7 +108,7 @@ export const editImage = async (req: Request, res: Response) => {
     const updatedImage = await imageSvc.updateImageEdit(req.params.id, title, imageUrl);
     res.json(updatedImage);
   } catch (error) {
-    res.status(500).json({ message: "Failed to update image" });
+    res.status(500).json({ message: ResponseError.INTERNAL_RESPONSE_ERROR });
   }
 }
 

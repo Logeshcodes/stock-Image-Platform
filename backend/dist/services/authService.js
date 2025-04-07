@@ -8,15 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.getUserPassword = exports.resetPasswordRequest = exports.loginUser = exports.registerUser = void 0;
+exports.resetPassword = exports.getUserPassword = exports.loginUser = exports.registerUser = void 0;
 const userRepository_1 = require("../repositories/userRepository");
 const passwordUtils_1 = require("../utils/passwordUtils");
 const jwtUtils_1 = require("../utils/jwtUtils");
-const crypto_1 = __importDefault(require("crypto"));
 const registerUser = (email, username, phoneNumber, password) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("first");
     const existingUser = yield (0, userRepository_1.findUserByEmail)(email);
@@ -37,19 +33,6 @@ const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, functio
     return (0, jwtUtils_1.generateJWT)(user._id);
 });
 exports.loginUser = loginUser;
-const resetPasswordRequest = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield (0, userRepository_1.findUserByEmail)(email);
-    if (!user)
-        throw new Error('User not found');
-    const resetToken = crypto_1.default.randomBytes(32).toString('hex');
-    const resetTokenExpiry = Date.now() + 3600000;
-    yield (0, userRepository_1.updateUser)(user._id, {
-        resetPasswordToken: resetToken,
-        resetPasswordExpires: resetTokenExpiry,
-    });
-    return resetToken;
-});
-exports.resetPasswordRequest = resetPasswordRequest;
 const getUserPassword = (userId) => __awaiter(void 0, void 0, void 0, function* () {
     return yield (0, userRepository_1.getUser)(userId);
 });

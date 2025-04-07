@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
-import { registerUser, loginUser, resetPasswordRequest, resetPassword , getUserPassword } from '../services/authService';
+import { registerUser, loginUser, resetPassword , getUserPassword } from '../services/authService';
 import { ResponseError } from '../utils/constants';
 import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -32,15 +31,6 @@ export const login = async (req: Request, res: Response) => {
     }
 };
 
-export const requestPasswordReset = async (req: Request, res: Response) => {
-    try {
-        const { email } = req.body;
-        const resetToken = await resetPasswordRequest(email);
-        res.status(200).json({ success : true , message:ResponseError.RESET_PASSWORD });
-    } catch (error: any) {
-        res.status(400).json({ error: error.message });
-    }
-};
 
 export const resetPasswordController = async (req: Request, res: Response) => {
     try {

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from '../services/api';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 const ImageUpload: React.FC = () => {
   const [images, setImages] = useState<File[]>([]);
@@ -45,13 +46,21 @@ const ImageUpload: React.FC = () => {
     });
 
     try {
-      await axios.post('/api/image/upload', formData, {
+      const response = await axios.post('/api/image/upload', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
         },
       });
-      navigate('/dashboard');
+
+
+      console.log("response upload : " , response);
+
+      if(response.data.success){
+        toast.success(response.data.message);
+        navigate('/dashboard');
+      }
+
     } catch (error) {
       console.error(error);
     }

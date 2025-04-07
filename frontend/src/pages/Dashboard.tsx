@@ -4,6 +4,7 @@ import ImageList from '../components/ImageList';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { LogOut, Key, Upload, Image, Grid, List, Search } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Dashboard: React.FC = () => {
 
   const handleLogout = () => {
     logout();
+    toast.success("Logout succesfully")
     navigate('/login');
   };
 

@@ -9,6 +9,5 @@ const authMiddleware_1 = require("../middleware/authMiddleware");
 const router = express_1.default.Router();
 router.post('/signup', authController_1.register);
 router.post('/login', authController_1.login);
-router.post('/request-password-reset', authController_1.requestPasswordReset);
 router.post('/change-password', authMiddleware_1.authMiddleware, authController_1.resetPasswordController);
 exports.default = router;

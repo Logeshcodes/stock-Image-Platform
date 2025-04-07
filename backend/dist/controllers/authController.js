@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPasswordController = exports.requestPasswordReset = exports.login = exports.register = void 0;
+exports.resetPasswordController = exports.login = exports.register = void 0;
 const authService_1 = require("../services/authService");
 const constants_1 = require("../utils/constants");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -45,17 +45,6 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.login = login;
-const requestPasswordReset = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email } = req.body;
-        const resetToken = yield (0, authService_1.resetPasswordRequest)(email);
-        res.status(200).json({ success: true, message: constants_1.ResponseError.RESET_PASSWORD });
-    }
-    catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-});
-exports.requestPasswordReset = requestPasswordReset;
 const resetPasswordController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { currentPassword, newPassword } = req.body;

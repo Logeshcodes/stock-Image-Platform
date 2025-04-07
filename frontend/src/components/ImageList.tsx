@@ -274,7 +274,8 @@ const ImageList: React.FC<ImageListProps> = ({ viewMode, searchTerm }) => {
               >
                 <div className="relative group">
                   <img
-                    src={`http://localhost:4000${image.imageUrl}`}
+                    // src={`http://localhost:4000${image.imageUrl}`}
+                    src={`https://stock-image-platform-backend.onrender.com${image.imageUrl}`}
                     alt={image.title}
                     className="h-48 w-full object-cover"
                   />
@@ -326,7 +327,8 @@ const ImageList: React.FC<ImageListProps> = ({ viewMode, searchTerm }) => {
                 className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100 flex"
               >
                 <img
-                  src={`http://localhost:4000${image.imageUrl}`}
+                  // src={`http://localhost:4000${image.imageUrl}`}
+                  src={`https://stock-image-platform-backend.onrender.com${image.imageUrl}`}
                   alt={image.title}
                   className="h-24 w-24 object-cover"
                 />
@@ -402,7 +404,7 @@ const ImageList: React.FC<ImageListProps> = ({ viewMode, searchTerm }) => {
                 className="mb-5 overflow-hidden rounded-lg relative group"
               >
                 <img
-                  src={previewUrl || `http://localhost:4000${currentImage.imageUrl}`}
+                  src={previewUrl || `https://stock-image-platform-backend.onrender.com${currentImage.imageUrl}`}
                   alt={currentImage.title}
                   className="w-full h-64 object-cover rounded-lg"
                 />

@@ -17,6 +17,7 @@ const ImageService_1 = require("../services/ImageService");
 const ImageRepository_1 = require("../repositories/ImageRepository");
 const path_1 = __importDefault(require("path"));
 const promises_1 = __importDefault(require("fs/promises"));
+const constants_1 = require("../utils/constants");
 const imageSvc = (0, ImageService_1.imageService)(ImageRepository_1.imageRepository);
 const uploadImages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -24,10 +25,15 @@ const uploadImages = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const images = req.files;
         const { titles } = req.body;
         const uploadedImages = yield imageSvc.uploadImages(images, userId, titles);
-        res.status(201).json(uploadedImages);
+        res.status(201).json({ uploadedImages,
+            success: true,
+            message: constants_1.ResponseError.IMAGE_UPLOADED_SUCCESS, });
     }
     catch (error) {
-        res.status(500).json({ error: "Image upload failed" });
+        res.status(500).json({
+            success: false,
+            message: constants_1.ResponseError.IMAGE_UPLOAD_FAILED,
+        });
     }
 });
 exports.uploadImages = uploadImages;
@@ -42,21 +48,12 @@ const getImages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getImages = getImages;
-// export const deleteImage = async (req: Request, res: Response) => {
-//   try {
-//     const { id } = req.params;
-//     await imageSvc.deleteImage(id);
-//     res.status(200).json({ message: "Image deleted" });
-//   } catch (error) {
-//     res.status(500).json({ error: "Image deletion failed" });
-//   }
-// };
 const deleteImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
         const image = yield imageSvc.getImageDoc(id);
         if (!image) {
-            res.status(404).json({ message: "Image not found" });
+            res.status(404).json({ message: constants_1.ResponseError.IMAGE_NOTFOUND });
             return;
         }
         const imagePath = path_1.default.join(__dirname, '../../', image.imageUrl);
@@ -69,11 +66,10 @@ const deleteImage = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             return;
         }
         yield imageSvc.deleteImage(id);
-        res.status(200).json({ message: "Image and file deleted successfully" });
+        res.status(200).json({ success: true, message: constants_1.ResponseError.IMAGE_DELETED_SUCCESS });
     }
     catch (error) {
-        console.error('Error deleting image:', error);
-        res.status(500).json({ message: "Internal server error" });
+        res.status(500).json({ message: constants_1.ResponseError.INTERNAL_RESPONSE_ERROR });
     }
 });
 exports.deleteImage = deleteImage;
@@ -104,10 +100,10 @@ const editImageTitle = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const { title } = req.body;
     try {
         yield imageSvc.updateImageTitle(id, title);
-        res.status(200).json({ message: "Image title updated successfully" });
+        res.status(200).json({ message: constants_1.ResponseError.IMAGE_EDITED });
     }
     catch (error) {
-        res.status(500).json({ message: "Failed to update image title" });
+        res.status(500).json({ message: constants_1.ResponseError.INTERNAL_RESPONSE_ERROR });
     }
 });
 exports.editImageTitle = editImageTitle;
@@ -119,7 +115,7 @@ const editImage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.json(updatedImage);
     }
     catch (error) {
-        res.status(500).json({ message: "Failed to update image" });
+        res.status(500).json({ message: constants_1.ResponseError.INTERNAL_RESPONSE_ERROR });
     }
 });
 exports.editImage = editImage;
