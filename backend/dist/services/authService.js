@@ -27,6 +27,9 @@ const registerUser = (email, username, phoneNumber, password) => __awaiter(void 
 exports.registerUser = registerUser;
 const loginUser = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield (0, userRepository_1.findUserByEmail)(email);
+    if (!user || !(yield (0, passwordUtils_1.comparePasswords)(password, user.password))) {
+        throw new Error('Invalid email or password');
+    }
     return (0, jwtUtils_1.generateJWT)(user._id);
 });
 exports.loginUser = loginUser;

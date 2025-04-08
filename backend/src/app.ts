@@ -9,12 +9,13 @@ dotenv.config();
 connectToDatabase();
 
 const app = express();
-// const FRONTEND_ENV = process.env.FRONTEND_URL || "http://localhost:3000" || "https://stock-image-platform-two.vercel.app" || "https://stock-image-platform-jeoi.vercel.app";
+
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000" ;
 
 app.use(
   cors({
     origin: FRONTEND_URL.replace(/\/$/, ""),
+    methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
     credentials: true,
   })
 );

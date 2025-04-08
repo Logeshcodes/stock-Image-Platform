@@ -37,20 +37,18 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         const user = yield (0, authService_1.findUser)(email);
         if (!user) {
-            res.json({
+            res.status(404).json({
                 success: false,
                 message: constants_1.ResponseError.ACCOUNT_NOT_FOUND,
             });
-            return;
         }
         console.log("password : ", password, "psw", user.password);
         const isPasswordValid = yield (0, passwordUtils_1.comparePasswords)(password, user.password);
         if (!isPasswordValid) {
-            res.json({
+            res.status(401).json({
                 success: false,
                 message: constants_1.ResponseError.INVAILD_PASSWORD,
             });
-            return;
         }
         const token = yield (0, authService_1.loginUser)(email, password);
         if (token) {

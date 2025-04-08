@@ -16,6 +16,7 @@ const app = (0, express_1.default)();
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000";
 app.use((0, cors_1.default)({
     origin: FRONTEND_URL.replace(/\/$/, ""),
+    methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
     credentials: true,
 }));
 app.use(express_1.default.json());
