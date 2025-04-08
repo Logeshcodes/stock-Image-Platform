@@ -10,15 +10,27 @@ connectToDatabase();
 
 const app = express();
 
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000" ;
+// const FRONTEND_URL = process.env.FRONTEND_URL || "http://localhost:3000" ;
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://stock-image-platform-7hx3.onrender.com",
+];
 
 app.use(
   cors({
-    origin: FRONTEND_URL.replace(/\/$/, ""),
-    methods: ["GET,HEAD,PUT,PATCH,POST,DELETE"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
   })
 );
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
